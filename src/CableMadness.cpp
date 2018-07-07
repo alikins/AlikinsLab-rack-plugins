@@ -1,17 +1,17 @@
 #include "AlikinsLab.hpp"
 
-
 struct CableMadness : Module {
 	enum ParamIds {
-		PITCH_PARAM,
+		TENSION_PARAM,
+		OPACITY_PARAM,
 		NUM_PARAMS
 	};
 	enum InputIds {
-		PITCH_INPUT,
+		TENSION_INPUT,
+		OPACITY_INPUT,
 		NUM_INPUTS
 	};
 	enum OutputIds {
-		SINE_OUTPUT,
 		NUM_OUTPUTS
 	};
 	enum LightIds {
@@ -19,8 +19,8 @@ struct CableMadness : Module {
 		NUM_LIGHTS
 	};
 
-	float phase = 0.0;
-	float blinkPhase = 0.0;
+	float tension = 0.5;
+	float opacity = 0.5;
 
 	CableMadness() : Module(NUM_PARAMS, NUM_INPUTS, NUM_OUTPUTS, NUM_LIGHTS) {}
 	void step() override;
@@ -33,30 +33,21 @@ struct CableMadness : Module {
 
 
 void CableMadness::step() {
-	// Implement a simple sine oscillator
-	float deltaTime = engineGetSampleTime();
 
-	// Compute the frequency from the pitch parameter and input
-	float pitch = params[PITCH_PARAM].value;
-	pitch += inputs[PITCH_INPUT].value;
-	pitch = clamp(pitch, -4.0f, 4.0f);
-	// The default pitch is C4
-	float freq = 261.626f * powf(2.0f, pitch);
+    if (inputs[TENSION_INPUT].active) {
+        params[TENSION_PARAM].value = inputs[TENSION_INPUT].value;
+    }
 
-	// Accumulate the phase
-	phase += freq * deltaTime;
-	if (phase >= 1.0f)
-		phase -= 1.0f;
+	if (inputs[OPACITY_INPUT].active) {
+        params[OPACITY_PARAM].value = inputs[OPACITY_INPUT].value;
+    }
 
-	// Compute the sine output
-	float sine = sinf(2.0f * M_PI * phase);
-	outputs[SINE_OUTPUT].value = 5.0f * sine;
+	tension = params[TENSION_PARAM].value;
+	opacity = params[OPACITY_PARAM].value;
 
-	// Blink light at 1Hz
-	blinkPhase += deltaTime;
-	if (blinkPhase >= 1.0f)
-		blinkPhase -= 1.0f;
-	lights[BLINK_LIGHT].value = (blinkPhase < 0.5f) ? 1.0f : 0.0f;
+	gToolbar->wireTensionSlider->setValue(tension);
+	gToolbar->wireOpacitySlider->setValue(opacity * 100.0f);
+
 }
 
 
@@ -69,11 +60,11 @@ struct CableMadnessWidget : ModuleWidget {
 		addChild(Widget::create<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(Widget::create<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(28, 87), module, CableMadness::PITCH_PARAM, -3.0, 3.0, 0.0));
+		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(4, 87), module, CableMadness::TENSION_PARAM, 0.0f, 1.0f, 0.5));
+		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(44 - 4, 87), module, CableMadness::OPACITY_PARAM, 0.0f, 1.0f, 0.5));
 
-		addInput(Port::create<PJ301MPort>(Vec(33, 186), Port::INPUT, module, CableMadness::PITCH_INPUT));
-
-		addOutput(Port::create<PJ301MPort>(Vec(33, 275), Port::OUTPUT, module, CableMadness::SINE_OUTPUT));
+		addInput(Port::create<PJ301MPort>(Vec(4, 186), Port::INPUT, module, CableMadness::TENSION_INPUT));
+		addInput(Port::create<PJ301MPort>(Vec(44, 186), Port::INPUT, module, CableMadness::OPACITY_INPUT));
 
 		addChild(ModuleLightWidget::create<MediumLight<RedLight>>(Vec(41, 59), module, CableMadness::BLINK_LIGHT));
 	}
