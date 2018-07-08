@@ -60,11 +60,11 @@ struct CableMadnessWidget : ModuleWidget {
 		addChild(Widget::create<ScrewSilver>(Vec(RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 		addChild(Widget::create<ScrewSilver>(Vec(box.size.x - 2 * RACK_GRID_WIDTH, RACK_GRID_HEIGHT - RACK_GRID_WIDTH)));
 
-		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(4, 87), module, CableMadness::TENSION_PARAM, 0.0f, 1.0f, 0.5));
-		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(44 - 4, 87), module, CableMadness::OPACITY_PARAM, 0.0f, 1.0f, 0.5));
+		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(25, 95), module, CableMadness::TENSION_PARAM, 0.0f, 1.0f, 0.5));
+		addInput(Port::create<PJ301MPort>(Vec(29, 140), Port::INPUT, module, CableMadness::TENSION_INPUT));
 
-		addInput(Port::create<PJ301MPort>(Vec(4, 186), Port::INPUT, module, CableMadness::TENSION_INPUT));
-		addInput(Port::create<PJ301MPort>(Vec(44, 186), Port::INPUT, module, CableMadness::OPACITY_INPUT));
+		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(25, 220), module, CableMadness::OPACITY_PARAM, 0.0f, 1.0f, 0.5));
+		addInput(Port::create<PJ301MPort>(Vec(29, 265), Port::INPUT, module, CableMadness::OPACITY_INPUT));
 
 		addChild(ModuleLightWidget::create<MediumLight<RedLight>>(Vec(41, 59), module, CableMadness::BLINK_LIGHT));
 	}
