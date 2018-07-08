@@ -15,7 +15,6 @@ struct CableMadness : Module {
 		NUM_OUTPUTS
 	};
 	enum LightIds {
-		BLINK_LIGHT,
 		NUM_LIGHTS
 	};
 
@@ -66,7 +65,6 @@ struct CableMadnessWidget : ModuleWidget {
 		addParam(ParamWidget::create<Davies1900hBlackKnob>(Vec(25, 220), module, CableMadness::OPACITY_PARAM, 0.0f, 1.0f, 0.5));
 		addInput(Port::create<PJ301MPort>(Vec(29, 265), Port::INPUT, module, CableMadness::OPACITY_INPUT));
 
-		addChild(ModuleLightWidget::create<MediumLight<RedLight>>(Vec(41, 59), module, CableMadness::BLINK_LIGHT));
 	}
 };
 
