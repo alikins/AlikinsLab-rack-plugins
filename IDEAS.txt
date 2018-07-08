@@ -1,0 +1,37 @@
+- WidgetStorm
+ - a big a** module with examples of many many different
+   widgets
+ - mostly as demo / test
+ - sub sets
+   - builtin nanovg/oui/blendish
+   - rack provided unrestricted
+   - rack provided with restricted artwork (components.hpp)
+   - various interesting widgets reused from other open
+     source plugins
+  - maybe actually hook them up to outputs if someone wants
+    a weird controller
+- Vertigo
+  - like CableMadness, but modulate the zoom level
+  - 84% evil
+- Unnamed Module To Control Rack Scroll/Pan
+  - modulate the main rack view scroll bars
+  - 91% evil
+- Cable Madness 2: The Notch Uppening
+ - dig into rack scene/widget and tweak individual
+   wire widgets
+ - guess you could change the color, not sure what else
+ - could maybe set custom colors beyond the 4 enumerated
+   standard colors?
+   - would need to change the nvg context and not the
+     color enum for to_json/from_json to work?
+- Cable Madness 3D: At Worlds End
+  - add random cables?
+  - JW Cat can disconnect, guess we could add/connect
+    as well? maybe?
+  - Take 'Randomize' up from Chaotic Good to Chaotic Evil
+- Preset browser?
+  - browsable list of all plugin presets
+  - like module browser but for presets?
+  - kind of abusing module interface
+  - (suspect Rack will get a builtin version so
+     likely unneeded as a module)
