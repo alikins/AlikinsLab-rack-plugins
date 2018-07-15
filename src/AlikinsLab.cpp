@@ -3,8 +3,28 @@
 
 Plugin *plugin;
 
+struct ImageBlankModel : Model
+{
+	std::string imageFilename;
+	ModuleWidget *createModuleWidget() override
+	{
+		ImageBlank *module = new ImageBlank();
+		ModuleWidget *moduleWidget = new ImageBlankWidget(module);
+		moduleWidget->model = this;
+		return moduleWidget;
+	}
 
-void init(Plugin *p) {
+	ModuleWidget *createModuleWidgetNull() override
+	{
+		ModuleWidget *moduleWidget = new ImageBlankWidget(NULL);
+		moduleWidget->model = this;
+		return moduleWidget;
+	}
+};
+
+void
+init(Plugin *p)
+{
 	plugin = p;
 	p->slug = TOSTRING(SLUG);
 	p->version = TOSTRING(VERSION);
@@ -14,7 +34,8 @@ void init(Plugin *p) {
 	p->addModel(modelSampleDelay);
 	p->addModel(modelCredits);
 
-	std::string res_path = "res/blank_panels/";
+	debug("plugin path: %s", p->path.c_str());
+	std::string res_path = p->path + "/" + "res/blank_panels/";
 	for (std::string packagePath : systemListEntries(res_path)) {
 		if (stringExtension(packagePath) != "svg")
 			continue;
@@ -33,11 +54,12 @@ void init(Plugin *p) {
 		std::list<ModelTag> tags = {BLANK_TAG};
 		// Create a Model instance
 		// Model *modelImageBlank = Model::create<ImageBlank, ImageBlankWidget>("AlikinsLab", slugName, name, BLANK_TAG);
-		Model *modelImageBlank = new Model();
+		ImageBlankModel *modelImageBlank = new ImageBlankModel();
 		modelImageBlank->author = "AlikinsLab";
 		modelImageBlank->slug = slugName;
 		modelImageBlank->name = name;
 		modelImageBlank->tags = tags;
+		modelImageBlank->imageFilename = imageFilename;
 		// return ;
 
 		// Add it as a module
