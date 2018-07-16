@@ -9,15 +9,17 @@ struct ImageBlankModel : Model
 	ModuleWidget *createModuleWidget() override
 	{
 		ImageBlank *module = new ImageBlank();
-		ModuleWidget *moduleWidget = new ImageBlankWidget(module);
+		ImageBlankWidget *moduleWidget = new ImageBlankWidget(module, imageFilename);
 		moduleWidget->model = this;
+		moduleWidget->imageFilename = imageFilename;
 		return moduleWidget;
 	}
 
 	ModuleWidget *createModuleWidgetNull() override
 	{
-		ModuleWidget *moduleWidget = new ImageBlankWidget(NULL);
+		ImageBlankWidget *moduleWidget = new ImageBlankWidget(NULL, imageFilename);
 		moduleWidget->model = this;
+		moduleWidget->imageFilename = imageFilename;
 		return moduleWidget;
 	}
 };
@@ -35,22 +37,25 @@ init(Plugin *p)
 	p->addModel(modelCredits);
 
 	debug("plugin path: %s", p->path.c_str());
-	std::string res_path = p->path + "/" + "res/blank_panels/";
-	for (std::string packagePath : systemListEntries(res_path)) {
-		if (stringExtension(packagePath) != "svg")
+	std::string localPath = "res/blank_panels";
+	std::string res_path = p->path + "/" + localPath;
+
+	for (std::string svgPath : systemListEntries(res_path)) {
+		if (stringExtension(svgPath) != "svg")
 			continue;
 
-		info("Found blank panels %s", packagePath.c_str());
-		std::string imageFilename = stringFilename(packagePath);
+		info("Found blank panels at svgPath: %s", svgPath.c_str());
+		std::string imageFileBaseName = stringFilename(svgPath);
 
-		debug("Using imageFilename=%s", imageFilename.c_str());
+		debug("Using imageFilename=%s", imageFileBaseName.c_str());
 
-		std::string slugName = stringf("ImagePanel%s", imageFilename.c_str());
+		std::string slugName = stringf("ImagePanel%s", imageFileBaseName.c_str());
 		debug("slugName: %s", slugName.c_str());
 
-		std::string name = stringf("Image Panel %s", imageFilename.c_str());
+		std::string name = stringf("Image Panel %s", imageFileBaseName.c_str());
 		debug("name: %s", name.c_str());
 
+		std::string pluginRelativeSvgPath = localPath + "/" + imageFileBaseName;
 		std::list<ModelTag> tags = {BLANK_TAG};
 		// Create a Model instance
 		// Model *modelImageBlank = Model::create<ImageBlank, ImageBlankWidget>("AlikinsLab", slugName, name, BLANK_TAG);
@@ -59,7 +64,7 @@ init(Plugin *p)
 		modelImageBlank->slug = slugName;
 		modelImageBlank->name = name;
 		modelImageBlank->tags = tags;
-		modelImageBlank->imageFilename = imageFilename;
+		modelImageBlank->imageFilename = pluginRelativeSvgPath;
 		// return ;
 
 		// Add it as a module

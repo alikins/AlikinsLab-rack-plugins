@@ -25,7 +25,8 @@ struct ImageBlankWidget : ModuleWidget {
 };
 */
 
-ImageBlankWidget::ImageBlankWidget(ImageBlank *module) : ModuleWidget(module) {
+ImageBlankWidget::ImageBlankWidget(ImageBlank *module, std::string imageFilename) : ModuleWidget(module) {
+	debug("ImageBlankWidget constr imageFilename: %s", imageFilename.c_str());
 	setPanel(SVG::load(assetPlugin(plugin, imageFilename)));
 
 	addChild(Widget::create<ScrewSilver>(Vec(RACK_GRID_WIDTH, 0)));

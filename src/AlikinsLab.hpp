@@ -31,5 +31,5 @@ struct ImageBlank : Module {
 struct ImageBlankWidget : ModuleWidget {
     std::string imageFilename;
 
-	ImageBlankWidget(ImageBlank *module);
+	ImageBlankWidget(ImageBlank *module, std::string svgPath);
 };
