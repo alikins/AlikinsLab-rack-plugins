@@ -10,6 +10,7 @@ extern Plugin *plugin;
 extern Model *modelCableMadness;
 extern Model *modelSampleDelay;
 extern Model *modelCredits;
+extern Model *modelSVGBlank;
 
 struct ImageBlank : Module {
 	enum ParamIds {

@@ -35,6 +35,7 @@ init(Plugin *p)
 	p->addModel(modelCableMadness);
 	p->addModel(modelSampleDelay);
 	p->addModel(modelCredits);
+	p->addModel(modelSVGBlank);
 
 	debug("plugin path: %s", p->path.c_str());
 	std::string localPath = "res/blank_panels";
